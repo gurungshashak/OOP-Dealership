@@ -3,10 +3,6 @@ package com.pluralsight;
 import java.util.Scanner;
 
 public class UserInterface {
-    static Scanner scanner = new Scanner(System.in);
-    Dealership deal = new Dealership("","","");
-    DealershipFileManager fileManager = new DealershipFileManager();
-
     //*1 - Find vehicles within a price range
     //2 - Find vehicles by make / model
     //3 - Find vehicles by year range
@@ -18,8 +14,18 @@ public class UserInterface {
     //9 - Remove a vehicle
     //99 - Quit
 
+    static Scanner scanner = new Scanner(System.in);
+    private Dealership dealership;
+    private String file;
+
+    public UserInterface(String file) {
+        this.file = file;
+        this.dealership = DealershipFileManager.getDealership(file);
+    }
+
+
     public void displayMenu(){
-        System.out.println("||||| Welcome To My Dealership ||||||");
+        System.out.println("\n||||| Welcome To My Dealership ||||||");
         System.out.println("=====================================");
         System.out.println("1 - Find vehicles within a price range");
         System.out.println("2 - Find vehicles by make / model");
@@ -34,7 +40,8 @@ public class UserInterface {
     }
 
     public void choiceMenu(){
-        while(true){
+        boolean run = true;
+        while(run){
             displayMenu();
             System.out.print("Choose an option(Please enter a number): ");
             int choice = scanner.nextInt();
@@ -53,51 +60,49 @@ public class UserInterface {
                 case 6:
                     break;
                 case 7:
-                    listAll();
+                    listAllVehicles();
                     break;
                 case 8:
+                    addVehicleToFile();
                     break;
                 case 9:
                     break;
                 case 99:
                     System.out.println("||||||| BYE BYE COME AGAIN!!! |||||||");
                     System.out.println("=====================================");
-                    break;
+                    run = false;
                 default:
-                    System.out.println("=====Invalid Choice Pick Again=====");
+                    System.out.println("\n=====Invalid Choice Pick Again=====\n\n");
             }
         }
     }
-
-    public void listAll (){
-        for(Vehicle vehicle : deal.getVehicles()){
-            System.out.println(vehicle);
+    private void listAllVehicles(){
+        for(Vehicle vehicle : dealership.getVehicles()){
+            System.out.println(vehicle.toFile());
         }
     }
 
-    public void addVehicle(){
+    private void addVehicleToFile(){
         System.out.print("VIN: ");
         int vin = Integer.parseInt(scanner.nextLine());
-        System.out.println("Year: ");
+        System.out.print("Year: ");
         int year = Integer.parseInt(scanner.nextLine());
-        System.out.println("Make: ");
+        System.out.print("Make: ");
         String make = scanner.nextLine();
-        System.out.println("Model: ");
+        System.out.print("Model: ");
         String model = scanner.nextLine();
-        System.out.println("Type: ");
+        System.out.print("Type: ");
         String type = scanner.nextLine();
-        System.out.println("Color: ");
+        System.out.print("Color: ");
         String color = scanner.nextLine();
-        System.out.println("Mileage: ");
+        System.out.print("Mileage: ");
         int mileage = Integer.parseInt(scanner.nextLine());
-        System.out.println("Price: ");
+        System.out.print("Price: ");
         double price = Double.parseDouble(scanner.nextLine());
 
         Vehicle vehicle = new Vehicle(vin, year, make, model, type, color, mileage, price);
-        deal.addVehicle(vehicle);
-
+        dealership.addVehicle(vehicle);
+        System.out.println("Vehicle added successfully");
     }
-
-
 
 }
